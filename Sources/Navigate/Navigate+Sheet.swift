@@ -1,14 +1,13 @@
 import SwiftUI
 
 public extension View {
-
     /// Sheet of `Navigate` framework
     /// - Parameters:
     ///   - destination: The `NavigationDestination` to show in sheet
     ///   - onDismiss: dismiss callback
     /// - Returns: Returns: The view appended with the sheet
-    func sheet<Destination: NavigationDestination>(
-        destination: Binding<Destination?>,
+    func sheet(
+        destination: Binding<(some NavigationDestination)?>,
         onDismiss: (() -> Void)? = nil
     ) -> some View {
         sheet(item: destination, onDismiss: onDismiss, content: { $0.body })

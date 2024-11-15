@@ -1,7 +1,6 @@
 import SwiftUI
 
 public extension NavigationLink where Destination == Never {
-
     /// NavigationLink init for `Navigate` framework
     /// - Parameters:
     ///   - destination: The `NavigationDestination` to navigate to
