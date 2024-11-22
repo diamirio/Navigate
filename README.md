@@ -6,3 +6,31 @@
 # Navigate
 
 [![Swift Package Manager compatible](https://img.shields.io/badge/Swift%20Package%20Manager-compatible-brightgreen.svg)](https://github.com/apple/swift-package-manager)
+
+## Usage
+
+First of all you define your possible in one or more enums (depending on the structure of your app) like follows:
+
+```swift
+enum MainNavigationDestination: NavigationDestination {
+    case home
+    case detailCard(id: Int)
+    case settings
+
+    var id: Self { self }
+
+    @MainActor
+    var body: some View {
+        switch self {
+        case .home:
+            HomeView()
+
+        case let .detailCard(id):
+            DetailCardView(id: id)
+
+        case .settings:
+            SettingsView()
+        }
+    }
+}
+```
