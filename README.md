@@ -9,7 +9,7 @@
 
 ## Usage
 
-First of all you define your possible in one or more enums (depending on the structure of your app) like follows:
+Define your possible destinations in one or more enum (depending on the structure of your app) like follows:
 
 ```swift
 enum MainNavigationDestination: NavigationDestination {
@@ -34,3 +34,52 @@ enum MainNavigationDestination: NavigationDestination {
     }
 }
 ```
+
+Those `MainNavigationDestination` need to be applied to the first element within a `NavigationStack`.
+
+```swift
+extension View {
+    func navigationDestinationMain() -> some View {
+        navigationDestination(for: MainNavigationDestination.self)
+    }
+}
+```
+
+Example View:
+
+```swift
+struct ContentView: View {
+    var body: some View {
+        NavigationStack {
+            MainView()
+                .navigationDestinationMain()
+        }
+    }
+}
+```
+
+Use it in NavigationLink and sheet
+
+```swift
+struct MainView: View {
+
+    @State 
+    var showSheet = false
+
+    var body: some View {
+        List {
+            NavigationLink(
+                destination: NewsNavigationDestination.detailCard(id: 1)
+            ) {
+                Text("Click me")
+            }
+        }
+        .sheet(
+            destination: MainNavigationDestination.settings, 
+            isPresented: $showSheet
+        )
+    }
+}
+```
+
+The `.sheet(...)` and `.fullScreenCover(...)` modifier also contain some convenience paramters like `withNavigationStack` or `onDismiss`.
