@@ -1,5 +1,5 @@
 //
-//  Navigate+TopFullScreenCover.swift
+//  TopSheet.swift
 //  Navigate
 //
 //  Created by Alexander Kauer on 28.11.24.
@@ -8,55 +8,55 @@
 import SwiftUI
 
 #if canImport(UIKit)
-import UIKit
+    import UIKit
 
-private struct TopSheetNavigate<Destination: NavigationDestination>: ViewModifier {
-    @Binding
-    var destination: Destination?
+    private struct TopSheetNavigate<Destination: NavigationDestination>: ViewModifier {
+        @Binding
+        var destination: Destination?
 
-    let presentOn: () -> UIViewController?
+        let presentOn: () -> UIViewController?
 
-    @State
-    private var presentedViewController: UIViewController?
+        @State
+        private var presentedViewController: UIViewController?
 
-    func body(content: Content) -> some View {
-        content
-            .onChange(of: destination) { _ in
-                if let destination {
-                    createCover(for: destination)
-                } else {
-                    presentedViewController = nil
+        func body(content: Content) -> some View {
+            content
+                .onChange(of: destination) { _ in
+                    if let destination {
+                        createCover(for: destination)
+                    } else {
+                        presentedViewController = nil
+                    }
                 }
-            }
-            .onChange(of: presentedViewController) { [oldValue = presentedViewController] newValue in
-                if let newValue {
-                    presentOn()?.present(newValue, animated: true)
-                } else {
-                    oldValue?.dismiss(animated: true)
+                .onChange(of: presentedViewController) { [oldValue = presentedViewController] newValue in
+                    if let newValue {
+                        presentOn()?.present(newValue, animated: true)
+                    } else {
+                        oldValue?.dismiss(animated: true)
+                    }
                 }
-            }
+        }
+
+        private func createCover(for destination: Destination) {
+            let vc = UIHostingController(
+                rootView: destination.body
+                    .onDisappear {
+                        self.destination = nil
+                    }
+            )
+            vc.modalPresentationStyle = .pageSheet
+            presentedViewController = vc
+        }
     }
 
-    private func createCover(for destination: Destination) {
-        let vc = UIHostingController(
-            rootView: destination.body
-                .onDisappear {
-                    self.destination = nil
-                }
-        )
-        vc.modalPresentationStyle = .pageSheet
-        presentedViewController = vc
+    public extension View {
+        @ViewBuilder
+        func topSheet(
+            destination: Binding<(some NavigationDestination)?>,
+            presentOn: @escaping () -> UIViewController?
+        ) -> some View {
+            modifier(TopSheetNavigate(destination: destination, presentOn: presentOn))
+        }
     }
-}
-
-public extension View {
-    @ViewBuilder
-    func topSheet<Destination: NavigationDestination>(
-        destination: Binding<Destination?>,
-        presentOn: @escaping () -> UIViewController?
-    ) -> some View  {
-        modifier(TopSheetNavigate(destination: destination, presentOn: presentOn))
-    }
-}
 
 #endif
