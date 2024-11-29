@@ -2,7 +2,7 @@
 //  TopSheet.swift
 //  Navigate
 //
-//  Created by Alexander Kauer on 28.11.24.
+//  Created by Alexander Kauer on 29.11.24.
 //
 
 import SwiftUI
@@ -10,20 +10,21 @@ import SwiftUI
 #if canImport(UIKit)
     import UIKit
 
-    private struct TopSheetNavigate<Destination: NavigationDestination>: ViewModifier {
+    private struct TopSheet<SheetContent: View>: ViewModifier {
         @Binding
-        var destination: Destination?
+        var isPresented: Bool
 
         let presentOn: () -> UIViewController?
+        let sheetContent: () -> SheetContent
 
         @State
         private var presentedViewController: UIViewController?
 
         func body(content: Content) -> some View {
             content
-                .onChange(of: destination) { _ in
-                    if let destination {
-                        createCover(for: destination)
+                .onChange(of: isPresented) { _ in
+                    if isPresented {
+                        createCover()
                     } else {
                         presentedViewController = nil
                     }
@@ -37,11 +38,11 @@ import SwiftUI
                 }
         }
 
-        private func createCover(for destination: Destination) {
+        private func createCover() {
             let vc = UIHostingController(
-                rootView: destination.body
+                rootView: sheetContent()
                     .onDisappear {
-                        self.destination = nil
+                        isPresented = false
                     }
             )
             vc.modalPresentationStyle = .pageSheet
@@ -52,11 +53,67 @@ import SwiftUI
     public extension View {
         @ViewBuilder
         func topSheet(
-            destination: Binding<(some NavigationDestination)?>,
-            presentOn: @escaping () -> UIViewController?
+            isPresented: Binding<Bool>,
+            presentOn: @escaping () -> UIViewController?,
+            @ViewBuilder content: @escaping () -> some View
         ) -> some View {
-            modifier(TopSheetNavigate(destination: destination, presentOn: presentOn))
+            modifier(TopSheet(isPresented: isPresented, presentOn: presentOn, sheetContent: content))
         }
     }
+
+    #if DEBUG
+
+        private struct TopSheetPreviewView: View {
+            @State
+            private var presentCover = false
+
+            var body: some View {
+                Button("Present") {
+                    presentCover = true
+                }
+                .topSheet(isPresented: $presentCover) {
+                    topViewController()
+                } content: {
+                    CoverPreviewView()
+                }
+            }
+
+            private func topViewController() -> UIViewController? {
+                var topViewController = UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }
+                    .first(where: { $0.activationState == .foregroundActive })?.windows
+                    .first(where: { $0.isKeyWindow })?
+                    .rootViewController
+
+                while topViewController?.presentedViewController != nil {
+                    topViewController = topViewController?.presentedViewController
+                }
+                return topViewController
+            }
+        }
+
+        private struct CoverPreviewView: View {
+            @Environment(\.presentationMode)
+            private var presentationMode
+
+            var body: some View {
+                ZStack {
+                    Color.orange
+
+                    VStack {
+                        Text("Cover")
+
+                        Button("Dismiss") {
+                            presentationMode.wrappedValue.dismiss()
+                        }
+                    }
+                }
+            }
+        }
+
+        #Preview {
+            TopSheetPreviewView()
+        }
+
+    #endif
 
 #endif
