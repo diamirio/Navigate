@@ -83,3 +83,16 @@ struct MainView: View {
 ```
 
 The `.sheet(...)` and `.fullScreenCover(...)` modifier also contain some convenience paramters like `withNavigationStack` or `onDismiss`.
+
+### TopSheet and TopFullScreenCover
+
+As there is no out-of-the-box way for SwiftUI to display sheets or fullScreenCovers globally without dismissing current presented sheets we added `TopSheet` and `TopFullScreenCover` to the Navigate API.
+
+Usage: 
+
+```swift
+view.topSheet(
+    destination: $destination, 
+    presentOn: { UIViewController() }
+)
+```
