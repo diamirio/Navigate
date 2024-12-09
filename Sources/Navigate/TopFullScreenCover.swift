@@ -45,7 +45,7 @@ import SwiftUI
                         isPresented = false
                     }
             )
-            vc.modalPresentationStyle = .fullScreen
+            vc.modalPresentationStyle = .overFullScreen
             presentedViewController = vc
         }
     }
