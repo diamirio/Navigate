@@ -5,13 +5,29 @@ public extension View {
     /// FullScreenCover of `Navigate` framework
     /// - Parameters:
     ///   - destination: The `NavigationDestination` to show in fullscreen cover
+    ///   - withNavigationStack: Boolean value indicating if the sheet should come with a `NavigationStack`
+    ///   - navigationPath: Optional `NavigationPath` binding. Only applicable if `withNavigationStack` is true
     ///   - onDismiss: dismiss callback
     /// - Returns: The view appended with the fullScreenCover
-    func fullScreenCover(
-        destination: Binding<(some NavigationDestination)?>,
+    func fullScreenCover<Destination: NavigationDestination>(
+        destination: Binding<Destination?>,
+        withNavigationStack: Bool = false,
+        navigationPath: Binding<[Destination]>? = nil,
         onDismiss: (() -> Void)? = nil
     ) -> some View {
-        fullScreenCover(item: destination, onDismiss: onDismiss, content: { $0.body })
+        fullScreenCover(item: destination, onDismiss: onDismiss) { destination in
+            if withNavigationStack, let navigationPath {
+                NavigationStack(path: navigationPath) {
+                    destination.body
+                }
+            } else if withNavigationStack {
+                NavigationStack {
+                    destination.body
+                }
+            } else {
+                destination.body
+            }
+        }
     }
 
     /// FullScreenCover of `Navigate` framework with additional convenience options

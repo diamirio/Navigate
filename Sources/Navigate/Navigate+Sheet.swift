@@ -4,13 +4,29 @@ public extension View {
     /// Sheet of `Navigate` framework
     /// - Parameters:
     ///   - destination: The `NavigationDestination` to show in sheet
+    ///   - withNavigationStack: Boolean value indicating if the sheet should come with a `NavigationStack`
+    ///   - navigationPath: Optional `NavigationPath` binding. Only applicable if `withNavigationStack` is true
     ///   - onDismiss: dismiss callback
     /// - Returns: Returns: The view appended with the sheet
-    func sheet(
-        destination: Binding<(some NavigationDestination)?>,
+    func sheet<Destination: NavigationDestination>(
+        destination: Binding<Destination?>,
+        withNavigationStack: Bool = false,
+        navigationPath: Binding<[Destination]>? = nil,
         onDismiss: (() -> Void)? = nil
     ) -> some View {
-        sheet(item: destination, onDismiss: onDismiss, content: { $0.body })
+        sheet(item: destination, onDismiss: onDismiss) { destination in
+            if withNavigationStack, let navigationPath {
+                NavigationStack(path: navigationPath) {
+                    destination.body
+                }
+            } else if withNavigationStack {
+                NavigationStack {
+                    destination.body
+                }
+            } else {
+                destination.body
+            }
+        }
     }
 
     /// Sheet of `Navigate` framework with additional convenience options
