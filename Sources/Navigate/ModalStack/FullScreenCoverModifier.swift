@@ -30,6 +30,7 @@ struct FullScreenCoverModifier: ViewModifier {
     }
     
     func body(content: Content) -> some View {
+#if !os(macOS)
         content
             .fullScreenCover(item: sheetBinding(idx: idx)) { item in
                 if let mapping = mapping.mapping[ObjectIdentifier(type(of: item.destination))] {
@@ -41,5 +42,8 @@ struct FullScreenCoverModifier: ViewModifier {
                     EmptyView()
                 }
             }
+#else
+        content
+#endif
     }
 }

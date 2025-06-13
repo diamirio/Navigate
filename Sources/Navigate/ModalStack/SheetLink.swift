@@ -27,24 +27,3 @@ public struct SheetLink<Label: View>: View {
 		}
 	}
 }
-
-public struct FullScreenCoverLink<Label: View>: View {
-	let label: Label
-	let destination: any NavigationDestination
-	
-	@Environment(\.presentSheet)
-	private var presentSheet
-	
-	public init(destination: any NavigationDestination, @ViewBuilder label: () -> Label) {
-		self.destination = destination
-		self.label = label()
-	}
-	
-	public var body: some View {
-		Button {
-			presentSheet(destination, .fullScreen)
-		} label: {
-			label
-		}
-	}
-}
