@@ -20,8 +20,12 @@ public struct ModalStack<Root: View>: View {
 		self.root = root()
 	}
 	
-	private func presentSheet(_ destination: any NavigationDestination) {
-		path.append(AnyNavigationDestination(destination))
+	private func presentSheet(_ destination: any NavigationDestination, type: ModalType) {
+		path.append(AnyNavigationDestination(destination, type: type))
+	}
+	
+	private func dismissAll() {
+		path.removeAll()
 	}
 	
 	public var body: some View {
@@ -30,6 +34,8 @@ public struct ModalStack<Root: View>: View {
 				self.mapping = mapping
 			}
 			.modifier(SheetModifier(path: $path, idx: 0, mapping: mapping))
+			.modifier(FullScreenCoverModifier(path: $path, idx: 0, mapping: mapping))
 			.environment(\.presentSheet, presentSheet)
+			.environment(\.dismissAllModals, dismissAll)
 	}
 }

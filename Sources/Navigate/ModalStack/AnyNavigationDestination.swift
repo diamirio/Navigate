@@ -9,9 +9,11 @@ import SwiftUI
 
 struct AnyNavigationDestination: NavigationDestination {
 	let destination: any NavigationDestination
+	let type: ModalType
 	
-	init<D: NavigationDestination>(_ destination: D) {
+	init<D: NavigationDestination>(_ destination: D, type: ModalType) {
 		self.destination = destination
+		self.type = type
 	}
 	
 	func unwrap<D: NavigationDestination>() -> D {

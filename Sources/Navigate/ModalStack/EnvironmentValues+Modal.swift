@@ -9,5 +9,8 @@ import SwiftUI
 
 extension EnvironmentValues {
 	@Entry
-	var presentSheet: (any NavigationDestination) -> Void = { _ in }
+	var presentSheet: (any NavigationDestination, ModalType) -> Void = { _, _ in }
+	
+	@Entry
+	public var dismissAllModals: () -> Void = {}
 }

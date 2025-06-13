@@ -17,7 +17,7 @@ struct SheetModifier: ViewModifier {
 	
 	private func sheetBinding(idx: Int) -> Binding<AnyNavigationDestination?> {
 		Binding {
-			guard path.count > idx else { return nil }
+			guard path.count > idx && path[idx].type == .sheet else { return nil }
 			return path[idx]
 		} set: { newValue in
 			guard path.count > idx else { return }
@@ -35,6 +35,7 @@ struct SheetModifier: ViewModifier {
 				if let mapping = mapping.mapping[ObjectIdentifier(type(of: item.destination))] {
 					AnyView(mapping(item))
 						.modifier(SheetModifier(path: $path, idx: idx + 1, mapping: self.mapping))
+						.modifier(FullScreenCoverModifier(path: $path, idx: idx + 1, mapping: self.mapping))
 				} else {
 					let _ = print("missing sheet destination modifier")
 					EmptyView()
