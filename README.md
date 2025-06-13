@@ -7,40 +7,43 @@
 
 [![Swift Package Manager compatible](https://img.shields.io/badge/Swift%20Package%20Manager-compatible-brightgreen.svg)](https://github.com/apple/swift-package-manager)
 
+Navigate is a Swift navigation library that enables high-level modularization using `NavigationDestination` protocol. It introduces `ModalStack`, which works exactly like SwiftUI `NavigationStack` and allows you to display multiple **Sheets** and **FullScreenCovers** on top of each other.
+
 ## Usage
 
-Define your possible destinations in one or more enum (depending on the structure of your app) like follows:
+Define your possible destinations in a higher level package in one or more enums.
 
 ```swift
-enum MainNavigationDestination: NavigationDestination {
+import Navigate
+
+public enum MainNavigationDestination: NavigationDestination {
     case home
     case detailCard(id: Int)
     case settings
 
-    var id: Self { self }
-
-    @MainActor
-    var body: some View {
-        switch self {
-        case .home:
-            HomeView()
-
-        case let .detailCard(id):
-            DetailCardView(id: id)
-
-        case .settings:
-            SettingsView()
-        }
-    }
+    public var id: Self { self }
 }
 ```
 
 Those `MainNavigationDestination` need to be applied to the first element within a `NavigationStack`.
 
 ```swift
+import Navigate
+
+// Import your corresponding views if needed
+import FeatureHome 
+import FeatureCard
+import FeatureSettings
+
 extension View {
     func navigationDestinationMain() -> some View {
-        navigationDestination(for: MainNavigationDestination.self)
+        navigationDestination(for: MainNavigationDestination.self) { destination in
+            switch destination {
+                case .home: HomeView()
+                case .detailCard(let id): DetailCard(for: id)
+                case .settings: SettingsView()
+            }
+        }
     }
 }
 ```
@@ -84,6 +87,10 @@ struct MainView: View {
 
 The `.sheet(...)` and `.fullScreenCover(...)` modifier also contain some convenience paramters like `withNavigationStack` or `onDismiss`.
 
+### Convenience
+
+
+
 ### TopSheet and TopFullScreenCover
 
 As there is no out-of-the-box way for SwiftUI to display sheets or fullScreenCovers globally without dismissing current presented sheets we added `TopSheet` and `TopFullScreenCover` to the Navigate API.
@@ -96,3 +103,5 @@ view.topSheet(
     presentOn: { UIViewController() }
 )
 ```
+
+
