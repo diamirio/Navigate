@@ -9,23 +9,35 @@ import SwiftUI
 
 public struct ModalStack<Root: View>: View {
 	let root: Root
-	
+    
+    private var path: Binding<[ModalPathDestination]> {
+        externalPath ?? $internalPath
+    }
+    
+    private let externalPath: Binding<[ModalPathDestination]>?
+    
 	@State
-	private var path = [AnyNavigationDestination]()
-	
+    private var internalPath = [ModalPathDestination]()
+    
 	@State
-	private var mapping = ModalMappingStorage()
-	
+    private var mapping = ModalMappingStorage()
+
+	public init(path: Binding<[ModalPathDestination]>, @ViewBuilder _ root: () -> Root) {
+		self.externalPath = path
+		self.root = root()
+	}
+
 	public init(@ViewBuilder _ root: () -> Root) {
+        self.externalPath = nil
 		self.root = root()
 	}
 	
 	private func presentSheet(_ destination: any NavigationDestination, type: ModalType) {
-		path.append(AnyNavigationDestination(destination, type: type))
+        path.wrappedValue.append(ModalPathDestination(destination, type: type))
 	}
 	
 	private func dismissAll() {
-		path.removeAll()
+		path.wrappedValue.removeAll()
 	}
 	
 	public var body: some View {
@@ -33,8 +45,8 @@ public struct ModalStack<Root: View>: View {
 			.onPreferenceChange(ModalMappingPreferenceKey.self) { mapping in
 				self.mapping = mapping
 			}
-			.modifier(SheetModifier(path: $path, idx: 0, mapping: mapping))
-			.modifier(FullScreenCoverModifier(path: $path, idx: 0, mapping: mapping))
+			.modifier(SheetModifier(path: path, idx: 0, mapping: mapping))
+			.modifier(FullScreenCoverModifier(path: path, idx: 0, mapping: mapping))
 			.environment(\.presentSheet, presentSheet)
 			.environment(\.dismissAllModals, dismissAll)
 	}

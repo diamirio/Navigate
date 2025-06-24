@@ -9,13 +9,13 @@ import SwiftUI
 
 struct SheetModifier: ViewModifier {
 	@Binding
-	var path: [AnyNavigationDestination]
+	var path: [ModalPathDestination]
 	
 	let idx: Int
 	
 	let mapping: ModalMappingStorage
 	
-	private func sheetBinding(idx: Int) -> Binding<AnyNavigationDestination?> {
+	private func sheetBinding(idx: Int) -> Binding<ModalPathDestination?> {
 		Binding {
 			guard path.count > idx && path[idx].type == .sheet else { return nil }
 			return path[idx]

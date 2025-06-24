@@ -17,7 +17,7 @@ private struct ModalDestinationModifier<D: NavigationDestination, V: View>: View
 	}
 	
 	func body(content: Content) -> some View {
-		let closure = { @MainActor (anyDestination: AnyNavigationDestination) -> any View in
+		let closure = { @MainActor (anyDestination: ModalPathDestination) -> any View in
 			mapping(anyDestination.unwrap())
 		}
 		content.transformPreference(ModalMappingPreferenceKey.self) { mapping in

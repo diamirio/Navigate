@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum ModalType {
+public enum ModalType {
 	case sheet
 	case fullScreen
 }

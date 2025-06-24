@@ -16,7 +16,7 @@ struct ModalMappingPreferenceKey: PreferenceKey {
 }
 
 struct ModalMappingStorage: Equatable {
-	var mapping: [ObjectIdentifier: @MainActor (AnyNavigationDestination) -> any View] = [:]
+	var mapping: [ObjectIdentifier: @MainActor (ModalPathDestination) -> any View] = [:]
 	
 	static func == (lhs: Self, rhs: Self) -> Bool {
 		lhs.mapping.keys == rhs.mapping.keys

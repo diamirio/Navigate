@@ -7,11 +7,11 @@
 
 import SwiftUI
 
-struct AnyNavigationDestination: NavigationDestination {
+public struct ModalPathDestination: NavigationDestination {
 	let destination: any NavigationDestination
 	let type: ModalType
 	
-	init<D: NavigationDestination>(_ destination: D, type: ModalType) {
+	public init<D: NavigationDestination>(_ destination: D, type: ModalType) {
 		self.destination = destination
 		self.type = type
 	}
@@ -20,15 +20,15 @@ struct AnyNavigationDestination: NavigationDestination {
 		destination as! D
 	}
 	
-	var id: AnyHashable {
+	public var id: AnyHashable {
 		destination.id as! AnyHashable
 	}
 	
-	static func == (lhs: AnyNavigationDestination, rhs: AnyNavigationDestination) -> Bool {
+	public static func == (lhs: ModalPathDestination, rhs: ModalPathDestination) -> Bool {
 		lhs.destination.hashValue == rhs.destination.hashValue
 	}
 	
-	func hash(into hasher: inout Hasher) {
+	public func hash(into hasher: inout Hasher) {
 		hasher.combine(destination)
 	}
 }
