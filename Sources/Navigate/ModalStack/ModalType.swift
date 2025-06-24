@@ -9,5 +9,7 @@ import Foundation
 
 public enum ModalType {
 	case sheet
+    #if !os(macOS)
 	case fullScreen
+    #endif
 }

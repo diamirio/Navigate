@@ -35,7 +35,9 @@ struct SheetModifier: ViewModifier {
 				if let mapping = mapping.mapping[ObjectIdentifier(type(of: item.destination))] {
 					AnyView(mapping(item))
 						.modifier(SheetModifier(path: $path, idx: idx + 1, mapping: self.mapping))
+                        #if !os(macOS)
 						.modifier(FullScreenCoverModifier(path: $path, idx: idx + 1, mapping: self.mapping))
+                        #endif
 				} else {
 					let _ = print("missing sheet destination modifier")
 					EmptyView()

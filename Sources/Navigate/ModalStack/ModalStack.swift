@@ -46,7 +46,9 @@ public struct ModalStack<Root: View>: View {
 				self.mapping = mapping
 			}
 			.modifier(SheetModifier(path: path, idx: 0, mapping: mapping))
+        #if !os(macOS)
 			.modifier(FullScreenCoverModifier(path: path, idx: 0, mapping: mapping))
+        #endif
 			.environment(\.presentSheet, presentSheet)
 			.environment(\.dismissAllModals, dismissAll)
 	}

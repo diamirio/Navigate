@@ -89,7 +89,28 @@ The `.sheet(...)` and `.fullScreenCover(...)` modifier also contain some conveni
 
 ### Convenience
 
+Define a NavigationLink extension offering an initalizer with your `NavigationDestination` type.
 
+```swift
+public extension NavigationLink where Destination == Never {
+    
+    /// NavigationLink init for `Navigate` framework
+    /// - Parameters:
+    ///   - destination: The `NavigationDestination` to navigate to
+    ///   - label: The label for the `NavigationLink`
+    init(destination: MainNavigationDestination, @ViewBuilder label: () -> Label) {
+        self.init(value: destination, label: label)
+    }
+}
+```
+
+If defined you can use shorter syntax when creating a `NavigationLink`, `SheetLink` or `FullScreenCoverLink`.
+
+```swift
+NavigationLink(destination: .home) {
+    Text("Home")
+}
+```
 
 ### TopSheet and TopFullScreenCover
 
