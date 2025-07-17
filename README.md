@@ -27,6 +27,8 @@ public enum MainNavigationDestination: NavigationDestination {
 
 Those `MainNavigationDestination` need to be applied to the first element within a `NavigationStack`.
 
+
+### NavigationStack & NavigationLink
 ```swift
 import Navigate
 
@@ -86,6 +88,9 @@ struct MainView: View {
 ```
 
 The `.sheet(...)` and `.fullScreenCover(...)` modifier also contain some convenience paramters like `withNavigationStack` or `onDismiss`.
+
+### ModalStack with SheetLink and FullScreenCoverLink
+tbd
 
 ### Convenience
 
