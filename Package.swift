@@ -1,4 +1,4 @@
-// swift-tools-version: 5.9
+// swift-tools-version: 6.1
 
 import PackageDescription
 
@@ -17,16 +17,15 @@ let package = Package(
             targets: ["Navigate"]
         )
     ],
-    dependencies: [
-        .package(url: "https://github.com/nicklockwood/SwiftFormat", from: "0.54.6")
-    ],
+    dependencies: [],
     targets: [
         .target(
             name: "Navigate"
         ),
         .testTarget(
             name: "NavigateTests",
-            dependencies: ["Navigate"]
+            dependencies: ["Navigate"],
+            exclude: ["NavigateTesting/*"]
         )
     ]
 )
