@@ -7,7 +7,7 @@
 
 [![Swift Package Manager compatible](https://img.shields.io/badge/Swift%20Package%20Manager-compatible-brightgreen.svg)](https://github.com/apple/swift-package-manager)
 
-Navigate is a Swift navigation library that enables high-level modularization using `NavigationDestination` protocol. It introduces `ModalStack`, which works exactly like SwiftUI `NavigationStack` and allows you to display multiple **Sheets** and **FullScreenCovers** on top of each other.
+Navigate is a Swift navigation library that enables high-level modularization using `NavigationDestination` protocol. It introduces `ModalStack`, which works exactly like SwiftUI `NavigationStack` and allows you to display multiple **Sheets** and **FullScreenCovers** on top of each other and bind all displayed sheets to a `path`.
 
 ## Usage
 
@@ -29,6 +29,7 @@ Those `MainNavigationDestination` need to be applied to the first element within
 
 
 ### NavigationStack & NavigationLink
+
 ```swift
 import Navigate
 
@@ -67,10 +68,6 @@ Use it in NavigationLink and sheet
 
 ```swift
 struct MainView: View {
-
-    @State 
-    var showSheet = false
-
     var body: some View {
         List {
             NavigationLink(
@@ -79,18 +76,26 @@ struct MainView: View {
                 Text("Click me")
             }
         }
-        .sheet(
-            destination: MainNavigationDestination.settings, 
-            isPresented: $showSheet
-        )
     }
 }
 ```
 
-The `.sheet(...)` and `.fullScreenCover(...)` modifier also contain some convenience paramters like `withNavigationStack` or `onDismiss`.
-
 ### ModalStack with SheetLink and FullScreenCoverLink
-tbd
+
+Simalar to NavigationStack you add a `ModalStack` to enable all Navigate modal presentation features. It also supports a `path` parameter. ModalStack must be placed on the top-most level of your views.
+
+```swift
+    var body: some View {
+        ModalStack(path: $router.modalPath) {
+            TabView {
+                ...
+            }
+        }
+    }
+}
+```
+
+This enables you to use `ShareLink` and `FullScreenCoverLink` in any child view.
 
 ### Convenience
 
@@ -117,7 +122,7 @@ NavigationLink(destination: .home) {
 }
 ```
 
-### TopSheet and TopFullScreenCover
+## Legacy support: TopSheet and TopFullScreenCover
 
 As there is no out-of-the-box way for SwiftUI to display sheets or fullScreenCovers globally without dismissing current presented sheets we added `TopSheet` and `TopFullScreenCover` to the Navigate API.
 
