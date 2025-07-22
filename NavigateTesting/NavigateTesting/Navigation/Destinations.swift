@@ -37,3 +37,13 @@ extension SheetLink {
         self.init(destination: destination as any NavigationDestination, label: label)
     }
 }
+
+extension FullScreenCoverLink {
+    /// NavigationLink init for `Navigate` framework
+    /// - Parameters:
+    ///   - destination: The `NavigationDestination` to navigate to
+    ///   - label: The label for the `NavigationLink`
+    init(destination: MyDestination, @ViewBuilder label: @escaping () -> Label) {
+        self.init(destination: destination as any NavigationDestination, label: label)
+    }
+}

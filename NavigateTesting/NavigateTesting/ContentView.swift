@@ -23,7 +23,6 @@ struct ContentView: View {
                     }
                 }
                 
-                
                 Tab("Tab", systemImage: "pencil", value: .tab) {
                     NavigationStack(path: $router.tabPath) {
                         FeatureAView()

@@ -19,6 +19,10 @@ struct FeatureAView: View {
         SheetLink(destination: .featureB) {
             Text("Sheet to feature b")
         }
+        
+        FullScreenCoverLink(destination: .settings) {
+            Text("Go to settings :)")
+        }
     }
 }
 
