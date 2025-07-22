@@ -8,6 +8,7 @@
 import SwiftUI
 
 #if !os(macOS)
+/// A view that controls a navigation presentation as a FullScreenCover in a `ModalStack`
 public struct FullScreenCoverLink<Label: View>: View {
     let label: Label
     let destination: any NavigationDestination

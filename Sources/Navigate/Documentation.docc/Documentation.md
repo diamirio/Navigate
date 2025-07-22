@@ -21,6 +21,7 @@ enum MyDestination: NavigationDestination {
     var id: Self { self }
 }
 ```
+
 #### Convenience
 To be able to write shortenings for your custom destinations, convenience initializers are necessary. These code can be copied from below and adopted accordingly.
 
@@ -57,9 +58,26 @@ extension FullScreenCoverLink {
 }
 ```
 
-#### NavigationStack & ModalStack
+### ModalStack
+#### Definition
 Those `MyDestination`s need to be applied to the first element within a `ModalStack` similar to SwiftUI's `NavigationStack`.
 
+```swift
+@State var modalPath: [ModalPathDestination] = []
+
+var body: some View {
+    ModalStack(path: $modalPath) {
+        List {
+            SheetLink(destination: .featureB) {
+                Text("Sheet to feature B")
+            }
+        }
+        .myModalDestinations() // register all modal destinations
+    }
+}
+```
+
+#### Register destinations
 
 ```swift
 import Navigate
@@ -70,61 +88,56 @@ import FeatureCard
 import FeatureSettings
 
 extension View {
-    func navigationDestinationMain() -> some View {
-        navigationDestination(for: MainNavigationDestination.self) { destination in
+    /// SwiftUI navigation destination convenience
+    func myNavigtationDestinations() -> some View {
+        self.navigationDestination(for: MyDestination.self) { destination in
             switch destination {
-                case .home: HomeView()
-                case .detailCard(let id): DetailCard(for: id)
-                case .settings: SettingsView()
+            case .featureA:
+                FeatureAView()
+            case .featureB:
+                FeatureBView()
+            ...
+            }
+        }
+    }
+    
+    /// All ModalDestinations wrapped in NavigationStack to support SwiftUI navigation and toolbar
+    func myModalDestinations() -> some View {
+        self.modalDestination(for: MyDestination.self) { destination in
+            switch destination {
+            case .featureA:
+                NavigationStack {
+                    FeatureAView()
+                        .myNavigtationDestinations()
+                }
+            case .featureB:
+                NavigationStack {
+                    FeatureBView()
+                        .myNavigtationDestinations()
+                }
+            ...
             }
         }
     }
 }
+
 ```
 
-Example View:
+## Available SwiftUI links
+Use the `NavigationLink`, `SheetLink` and `FullScreenCoverLink`
 
 ```swift
-struct ContentView: View {
-    var body: some View {
-        NavigationStack {
-            MainView()
-                .navigationDestinationMain()
-        }
+List {
+    NavigationLink(destination: .featureB) {
+        Text("Go to feature B")
+    }
+
+    SheetLink(destination: .featureB) {
+        Text("Sheet to feature B")
+    }
+
+    FullScreenCoverLink(destination: .featureB) {
+        Text("FullScreenCover to feature B")
     }
 }
 ```
-
-Use it in NavigationLink and sheet
-
-```swift
-struct MainView: View {
-
-    @State 
-    var showSheet = false
-
-    var body: some View {
-        List {
-            NavigationLink(
-                destination: NewsNavigationDestination.detailCard(id: 1)
-            ) {
-                Text("Click me")
-            }
-        }
-        .sheet(
-            destination: MainNavigationDestination.settings, 
-            isPresented: $showSheet
-        )
-    }
-}
-```
-
-The `.sheet(...)` and `.fullScreenCover(...)` modifier also contain some convenience paramters like `withNavigationStack` or `onDismiss`.
-
-## Components
-
-- ``NavigationDestination``
-- ``ModalStack``
-- ``SheetLink``
-- ``FullScreenCoverLink``
-- ``ModalPathDestination``
