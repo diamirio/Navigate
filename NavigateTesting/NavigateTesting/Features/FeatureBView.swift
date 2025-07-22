@@ -14,17 +14,21 @@ struct FeatureBView: View {
     var router: Router
     
     var body: some View {
-        Text("Feature B")
-        
-        SheetLink(destination: .featureB) {
-            Text("Feature B again ...")
+        List {
+            NavigationLink(destination: .featureC) {
+                Text("Go to feature C")
+            }
+            
+            SheetLink(destination: .featureC) {
+                Text("Sheet to feature C")
+            }
+            
+            FullScreenCoverLink(destination: .featureC) {
+                Text("FullScreenCover to feature C")
+            }
         }
-        
-        Button("Dismiss all") {
-            router.homeTabPath = []
-            router.tabPath = []
-            router.modalPath = []
-        }
+        .navigationTitle("Feature B")
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
 

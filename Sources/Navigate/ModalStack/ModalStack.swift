@@ -8,7 +8,7 @@
 import SwiftUI
 
 public struct ModalStack<Root: View>: View {
-	let root: Root
+	private let root: Root
     
     private var path: Binding<[ModalPathDestination]> {
         externalPath ?? $internalPath

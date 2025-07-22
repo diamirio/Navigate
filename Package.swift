@@ -20,12 +20,13 @@ let package = Package(
     dependencies: [],
     targets: [
         .target(
-            name: "Navigate"
+            name: "Navigate",
+            exclude: ["../../NavigateTesting"]
         ),
         .testTarget(
             name: "NavigateTests",
             dependencies: ["Navigate"],
-            exclude: ["NavigateTesting/*"]
+            exclude: ["../../NavigateTesting"]
         )
     ]
 )

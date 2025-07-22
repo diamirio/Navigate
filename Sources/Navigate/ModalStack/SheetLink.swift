@@ -8,8 +8,8 @@
 import SwiftUI
 
 public struct SheetLink<Label: View>: View {
-	let label: Label
-	let destination: any NavigationDestination
+	private let label: Label
+	private let destination: any NavigationDestination
 	
 	@Environment(\.presentSheet)
 	private var presentSheet

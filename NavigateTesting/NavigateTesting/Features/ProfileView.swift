@@ -7,13 +7,15 @@
 
 import SwiftUI
 
-struct SubSettingsView: View {
+struct ProfileView: View {
     var body: some View {
-        Text("Sub Settings")
-            .navigationTitle("Sub Settings")
+        List {
+            
+        }
+        .navigationTitle("Profile View")
     }
 }
 
 #Preview {
-    SubSettingsView()
+    ProfileView()
 }
