@@ -12,7 +12,7 @@ Simple navigation for SwiftUI
 ## Overview
 Navigate is a Swift navigation library that enables high-level modularization using `NavigationDestination` protocol. It introduces `ModalStack`, which works exactly like SwiftUI `NavigationStack` and allows you to display multiple **Sheets** and **FullScreenCovers** on top of each other.
 
-![./Sources/Navigate/Documentation.docc/Ressources/dismiss-all.gif](Dismiss all animation with path binding.)
+![Dismiss all animation with path binding.](./Sources/Navigate/Documentation.docc/Ressources/dismiss-all.gif)
 
 ### Define your destinations
 Define your possible destinations in a higher level package in one or more enums.
