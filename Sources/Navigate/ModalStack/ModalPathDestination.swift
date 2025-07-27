@@ -19,6 +19,10 @@ public struct ModalPathDestination: NavigationDestination {
 	func unwrap<D: NavigationDestination>() -> D {
 		destination as! D
 	}
+    
+    public func unwrap<D: NavigationDestination>(_ type: D.Type) -> D? {
+        destination as? D
+    }
 	
 	public var id: AnyHashable {
 		destination.id as! AnyHashable
