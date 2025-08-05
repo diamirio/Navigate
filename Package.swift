@@ -24,8 +24,7 @@ let package = Package(
         ),
         .testTarget(
             name: "NavigateTests",
-            dependencies: ["Navigate"],
-            exclude: ["NavigateTesting/*"]
+            dependencies: ["Navigate"]
         )
     ]
 )
