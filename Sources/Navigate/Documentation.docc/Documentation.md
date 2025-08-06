@@ -123,7 +123,7 @@ extension View {
 
 ```
 
-## Available SwiftUI links
+### Available SwiftUI links
 Use the `NavigationLink`, `SheetLink` and `FullScreenCoverLink`
 
 ```swift
