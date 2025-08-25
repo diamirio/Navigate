@@ -7,28 +7,85 @@
 
 [![Swift Package Manager compatible](https://img.shields.io/badge/Swift%20Package%20Manager-compatible-brightgreen.svg)](https://github.com/apple/swift-package-manager)
 
-Navigate is a Swift navigation library that enables high-level modularization using `NavigationDestination` protocol. It introduces `ModalStack`, which works exactly like SwiftUI `NavigationStack` and allows you to display multiple **Sheets** and **FullScreenCovers** on top of each other and bind all displayed sheets to a `path`.
+Simple navigation for SwiftUI
 
-## Usage
+## Overview
+Navigate is a Swift navigation library that enables high-level modularization using `NavigationDestination` protocol. It introduces `ModalStack`, which works exactly like SwiftUI `NavigationStack` and allows you to display multiple **Sheets** and **FullScreenCovers** on top of each other.
 
+![Dismiss all animation with path binding.](./Sources/Navigate/Documentation.docc/Ressources/dismiss-all.gif)
+
+### Define your destinations
 Define your possible destinations in a higher level package in one or more enums.
 
 ```swift
 import Navigate
 
-public enum MainNavigationDestination: NavigationDestination {
-    case home
-    case detailCard(id: Int)
+enum MyDestination: NavigationDestination {
+    case featureA
+    case featureB
     case settings
-
-    public var id: Self { self }
+    case subSettings
+    
+    var id: Self { self }
 }
 ```
 
-Those `MainNavigationDestination` need to be applied to the first element within a `NavigationStack`.
+#### Convenience
+To be able to write shortenings for your custom destinations, convenience initializers are necessary. These code can be copied from below and adopted accordingly.
 
+```swift
+extension NavigationLink where Destination == Never {
+    
+    /// NavigationLink init for `Navigate` framework
+    /// - Parameters:
+    ///   - destination: The `NavigationDestination` to navigate to
+    ///   - label: The label for the `NavigationLink`
+    init(destination: MyDestination, @ViewBuilder label: @escaping () -> Label) {
+        self.init(value: destination, label: label)
+    }
+}
 
-### NavigationStack & NavigationLink
+extension SheetLink {
+    /// NavigationLink init for `Navigate` framework
+    /// - Parameters:
+    ///   - destination: The `NavigationDestination` to navigate to
+    ///   - label: The label for the `NavigationLink`
+    init(destination: MyDestination, @ViewBuilder label: @escaping () -> Label) {
+        self.init(destination: destination as any NavigationDestination, label: label)
+    }
+}
+
+extension FullScreenCoverLink {
+    /// NavigationLink init for `Navigate` framework
+    /// - Parameters:
+    ///   - destination: The `NavigationDestination` to navigate to
+    ///   - label: The label for the `NavigationLink`
+    init(destination: MyDestination, @ViewBuilder label: @escaping () -> Label) {
+        self.init(destination: destination as any NavigationDestination, label: label)
+    }
+}
+```
+
+### ModalStack
+#### Definition
+Those `MyDestination`s need to be applied to the first element within a `ModalStack` similar to SwiftUI's `NavigationStack`.
+
+```swift
+@State var modalPath: [ModalPathDestination] = []
+
+var body: some View {
+    ModalStack(path: $modalPath) {
+        List {
+            SheetLink(destination: .featureB) {
+                Text("Sheet to feature B")
+            }
+        }
+        .myModalDestinations() // register all modal destinations
+    }
+}
+```
+
+#### Register destinations
 
 ```swift
 import Navigate
@@ -39,98 +96,56 @@ import FeatureCard
 import FeatureSettings
 
 extension View {
-    func navigationDestinationMain() -> some View {
-        navigationDestination(for: MainNavigationDestination.self) { destination in
+    /// SwiftUI navigation destination convenience
+    func myNavigtationDestinations() -> some View {
+        self.navigationDestination(for: MyDestination.self) { destination in
             switch destination {
-                case .home: HomeView()
-                case .detailCard(let id): DetailCard(for: id)
-                case .settings: SettingsView()
+            case .featureA:
+                FeatureAView()
+            case .featureB:
+                FeatureBView()
+            ...
             }
         }
     }
-}
-```
-
-Example View:
-
-```swift
-struct ContentView: View {
-    var body: some View {
-        NavigationStack {
-            MainView()
-                .navigationDestinationMain()
-        }
-    }
-}
-```
-
-Use it in NavigationLink and sheet
-
-```swift
-struct MainView: View {
-    var body: some View {
-        List {
-            NavigationLink(
-                destination: NewsNavigationDestination.detailCard(id: 1)
-            ) {
-                Text("Click me")
-            }
-        }
-    }
-}
-```
-
-### ModalStack with SheetLink and FullScreenCoverLink
-
-Simalar to NavigationStack you add a `ModalStack` to enable all Navigate modal presentation features. It also supports a `path` parameter. ModalStack must be placed on the top-most level of your views.
-
-```swift
-    var body: some View {
-        ModalStack(path: $router.modalPath) {
-            TabView {
-                ...
-            }
-        }
-    }
-}
-```
-
-This enables you to use `ShareLink` and `FullScreenCoverLink` in any child view.
-
-### Convenience
-
-Define a NavigationLink extension offering an initalizer with your `NavigationDestination` type.
-
-```swift
-public extension NavigationLink where Destination == Never {
     
-    /// NavigationLink init for `Navigate` framework
-    /// - Parameters:
-    ///   - destination: The `NavigationDestination` to navigate to
-    ///   - label: The label for the `NavigationLink`
-    init(destination: MainNavigationDestination, @ViewBuilder label: () -> Label) {
-        self.init(value: destination, label: label)
+    /// All ModalDestinations wrapped in NavigationStack to support SwiftUI navigation and toolbar
+    func myModalDestinations() -> some View {
+        self.modalDestination(for: MyDestination.self) { destination in
+            switch destination {
+            case .featureA:
+                NavigationStack {
+                    FeatureAView()
+                        .myNavigtationDestinations()
+                }
+            case .featureB:
+                NavigationStack {
+                    FeatureBView()
+                        .myNavigtationDestinations()
+                }
+            ...
+            }
+        }
     }
 }
+
 ```
 
-If defined you can use shorter syntax when creating a `NavigationLink`, `SheetLink` or `FullScreenCoverLink`.
+## Available SwiftUI links
+Use the `NavigationLink`, `SheetLink` and `FullScreenCoverLink`
 
 ```swift
-NavigationLink(destination: .home) {
-    Text("Home")
+List {
+    NavigationLink(destination: .featureB) {
+        Text("Go to feature B")
+    }
+
+    SheetLink(destination: .featureB) {
+        Text("Sheet to feature B")
+    }
+
+    FullScreenCoverLink(destination: .featureB) {
+        Text("FullScreenCover to feature B")
+    }
 }
-```
-
-## Legacy support: TopSheet and TopFullScreenCover
-
-As there is no out-of-the-box way for SwiftUI to display sheets or fullScreenCovers globally without dismissing current presented sheets we added `TopSheet` and `TopFullScreenCover` to the Navigate API.
-
-Usage: 
-
-```swift
-view.topSheet(
-    destination: $destination, 
-    presentOn: { UIViewController() }
-)
 ```

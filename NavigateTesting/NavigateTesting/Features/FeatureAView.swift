@@ -10,19 +10,21 @@ import SwiftUI
 
 struct FeatureAView: View {
     var body: some View {
-        Text("Feature A")
-        
-        NavigationLink(destination: .featureB) {
-            Text("Go to feature b")
+        List {
+            NavigationLink(destination: .featureB) {
+                Text("Go to feature B")
+            }
+            
+            SheetLink(destination: .featureB) {
+                Text("Sheet to feature B")
+            }
+            
+            FullScreenCoverLink(destination: .featureB) {
+                Text("FullScreenCover to feature B")
+            }
         }
-        
-        SheetLink(destination: .featureB) {
-            Text("Sheet to feature b")
-        }
-        
-        FullScreenCoverLink(destination: .settings) {
-            Text("Go to settings :)")
-        }
+        .navigationTitle("Feature A")
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
 

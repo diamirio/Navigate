@@ -11,8 +11,10 @@ import SwiftUI
 enum MyDestination: NavigationDestination {
     case featureA
     case featureB
+    case featureC
+    case featureD
     case settings
-    case subSettings
+    case profile
     
     var id: Self { self }
 }

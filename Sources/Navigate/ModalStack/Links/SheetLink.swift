@@ -7,9 +7,10 @@
 
 import SwiftUI
 
+/// A view that controls a navigation presentation as a Sheet in a `ModalStack`
 public struct SheetLink<Label: View>: View {
-	let label: Label
-	let destination: any NavigationDestination
+	private let label: Label
+	private let destination: any NavigationDestination
 	
 	@Environment(\.presentSheet)
 	private var presentSheet

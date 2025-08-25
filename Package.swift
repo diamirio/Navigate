@@ -1,4 +1,4 @@
-// swift-tools-version: 6.1
+// swift-tools-version: 5.9
 
 import PackageDescription
 
@@ -17,14 +17,18 @@ let package = Package(
             targets: ["Navigate"]
         )
     ],
-    dependencies: [],
+    dependencies: [
+        .package(url: "https://github.com/swiftlang/swift-docc-plugin", from: "1.0.0"),
+    ],
     targets: [
         .target(
-            name: "Navigate"
+            name: "Navigate",
+            exclude: ["../../NavigateTesting"]
         ),
         .testTarget(
             name: "NavigateTests",
-            dependencies: ["Navigate"]
+            dependencies: ["Navigate"],
+            exclude: ["../../NavigateTesting"]
         )
     ]
 )

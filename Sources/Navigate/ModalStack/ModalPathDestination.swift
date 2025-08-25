@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+/// Helper for holding the `destination` with the modal presentation type
+/// Needed for binding the path of the `ModalStack`
 public struct ModalPathDestination: NavigationDestination {
 	let destination: any NavigationDestination
 	let type: ModalType

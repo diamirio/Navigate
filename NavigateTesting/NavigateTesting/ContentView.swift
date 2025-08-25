@@ -11,7 +11,7 @@ import SwiftUI
 struct ContentView: View {
     
     @State
-    var router = Router()
+    private var router = Router()
     
     var body: some View {
         ModalStack(path: $router.modalPath) {
@@ -20,46 +20,32 @@ struct ContentView: View {
                     NavigationStack(path: $router.homeTabPath) {
                         FeatureAView()
                             .myNavigtationDestinations()
+                            .toolbar {
+                                ToolbarItem(placement: .topBarTrailing) {
+                                    SheetLink(destination: .settings) {
+                                        Image(systemName: "gearshape")
+                                    }
+                                }
+                            }
                     }
                 }
                 
-                Tab("Tab", systemImage: "pencil", value: .tab) {
+                Tab("Feature B", systemImage: "pencil", value: .tab) {
                     NavigationStack(path: $router.tabPath) {
-                        FeatureAView()
-                            .myNavigtationDestinations()
-                    }
-                }
-            }
-            .modalDestination(for: MyDestination.self) { destination in
-                switch destination {
-                case .featureA:
-                    NavigationStack {
-                        FeatureAView()
-                            .myNavigtationDestinations()
-                    }
-                case .featureB:
-                    NavigationStack {
                         FeatureBView()
                             .myNavigtationDestinations()
                     }
-                case .settings:
-                    NavigationStack {
-                        SettingsView()
-                            .myNavigtationDestinations()
-                    }
-                case .subSettings:
-                    NavigationStack {
-                        SubSettingsView()
-                            .myNavigtationDestinations()
-                    }
                 }
             }
+            .myModalDestinations()
         }
         .environment(router)
     }
 }
 
 extension View {
+    
+    /// SwiftUI navigation destination convenience
     func myNavigtationDestinations() -> some View {
         self.navigationDestination(for: MyDestination.self) { destination in
             switch destination {
@@ -67,10 +53,52 @@ extension View {
                 FeatureAView()
             case .featureB:
                 FeatureBView()
+            case .featureC:
+                FeatureCView()
+            case .featureD:
+                FeatureDView()
             case .settings:
                 SettingsView()
-            case .subSettings:
-                SubSettingsView()
+            case .profile:
+                ProfileView()
+            }
+        }
+    }
+    
+    /// All ModalDestinations wrapped in NavigationStack to support SwiftUI navigation and toolbar
+    func myModalDestinations() -> some View {
+        self.modalDestination(for: MyDestination.self) { destination in
+            switch destination {
+            case .featureA:
+                NavigationStack {
+                    FeatureAView()
+                        .myNavigtationDestinations()
+                }
+            case .featureB:
+                NavigationStack {
+                    FeatureBView()
+                        .myNavigtationDestinations()
+                }
+            case .featureC:
+                NavigationStack {
+                    FeatureCView()
+                        .myNavigtationDestinations()
+                }
+            case .featureD:
+                NavigationStack {
+                    FeatureDView()
+                        .myNavigtationDestinations()
+                }
+            case .settings:
+                NavigationStack {
+                    SettingsView()
+                        .myNavigtationDestinations()
+                }
+            case .profile:
+                NavigationStack {
+                    ProfileView()
+                        .myNavigtationDestinations()
+                }
             }
         }
     }
