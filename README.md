@@ -23,8 +23,10 @@ import Navigate
 enum MyDestination: NavigationDestination {
     case featureA
     case featureB
+    case featureC
+    case featureD
     case settings
-    case subSettings
+    case profile
     
     var id: Self { self }
 }
@@ -87,43 +89,47 @@ var body: some View {
 
 #### Register destinations
 
+For better code organization and maintainability, use a dedicated view to handle destination resolution:
+
 ```swift
 import Navigate
+import SwiftUI
 
-// Import your corresponding views if needed
-import FeatureHome 
-import FeatureCard
-import FeatureSettings
+struct ResolvedDestinationView: View {
+    let destination: MyDestination
+    
+    var body: some View {
+        switch destination {
+        case .featureA:
+            FeatureAView()
+        case .featureB:
+            FeatureBView()
+        case .featureC:
+            FeatureCView()
+        case .featureD:
+            FeatureDView()
+        case .settings:
+            SettingsView()
+        case .profile:
+            ProfileView()
+        }
+    }
+}
 
 extension View {
     /// SwiftUI navigation destination convenience
     func myNavigtationDestinations() -> some View {
         self.navigationDestination(for: MyDestination.self) { destination in
-            switch destination {
-            case .featureA:
-                FeatureAView()
-            case .featureB:
-                FeatureBView()
-            ...
-            }
+            ResolvedDestinationView(destination: destination)
         }
     }
     
     /// All ModalDestinations wrapped in NavigationStack to support SwiftUI navigation and toolbar
     func myModalDestinations() -> some View {
         self.modalDestination(for: MyDestination.self) { destination in
-            switch destination {
-            case .featureA:
-                NavigationStack {
-                    FeatureAView()
-                        .myNavigtationDestinations()
-                }
-            case .featureB:
-                NavigationStack {
-                    FeatureBView()
-                        .myNavigtationDestinations()
-                }
-            ...
+            NavigationStack {
+                ResolvedDestinationView(destination: destination)
+                    .myNavigtationDestinations()
             }
         }
     }

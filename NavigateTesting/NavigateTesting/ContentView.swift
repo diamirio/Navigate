@@ -43,66 +43,8 @@ struct ContentView: View {
     }
 }
 
-extension View {
-    
-    /// SwiftUI navigation destination convenience
-    func myNavigtationDestinations() -> some View {
-        self.navigationDestination(for: MyDestination.self) { destination in
-            switch destination {
-            case .featureA:
-                FeatureAView()
-            case .featureB:
-                FeatureBView()
-            case .featureC:
-                FeatureCView()
-            case .featureD:
-                FeatureDView()
-            case .settings:
-                SettingsView()
-            case .profile:
-                ProfileView()
-            }
-        }
-    }
-    
-    /// All ModalDestinations wrapped in NavigationStack to support SwiftUI navigation and toolbar
-    func myModalDestinations() -> some View {
-        self.modalDestination(for: MyDestination.self) { destination in
-            switch destination {
-            case .featureA:
-                NavigationStack {
-                    FeatureAView()
-                        .myNavigtationDestinations()
-                }
-            case .featureB:
-                NavigationStack {
-                    FeatureBView()
-                        .myNavigtationDestinations()
-                }
-            case .featureC:
-                NavigationStack {
-                    FeatureCView()
-                        .myNavigtationDestinations()
-                }
-            case .featureD:
-                NavigationStack {
-                    FeatureDView()
-                        .myNavigtationDestinations()
-                }
-            case .settings:
-                NavigationStack {
-                    SettingsView()
-                        .myNavigtationDestinations()
-                }
-            case .profile:
-                NavigationStack {
-                    ProfileView()
-                        .myNavigtationDestinations()
-                }
-            }
-        }
-    }
-}
+
+
 
 #Preview {
     ContentView()
