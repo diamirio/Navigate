@@ -28,4 +28,5 @@ struct FeatureDView: View {
 
 #Preview {
     FeatureBView()
+        .previewRouter()
 }

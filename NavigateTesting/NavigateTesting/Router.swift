@@ -7,6 +7,7 @@
 
 import Navigate
 import Foundation
+import SwiftUI
 
 @Observable
 class Router {
@@ -21,4 +22,16 @@ class Router {
 enum MainTab {
     case home
     case tab
+}
+
+extension View {
+    
+    /// View extension for convinient previews
+    @ViewBuilder
+    func previewRouter() -> some View {
+        @State
+        var router = Router()
+        
+        self.environment(router)
+    }
 }

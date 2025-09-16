@@ -8,7 +8,7 @@
 import Navigate
 import SwiftUI
 
-struct ContentView: View {
+struct MainView: View {
     
     @State
     private var router = Router()
@@ -47,5 +47,5 @@ struct ContentView: View {
 
 
 #Preview {
-    ContentView()
+    MainView()
 }
