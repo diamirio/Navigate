@@ -32,7 +32,7 @@ struct ResolvedDestinationView: View {
 
 extension View {
     /// SwiftUI navigation destination convenience
-    func myNavigtationDestinations() -> some View {
+    func myNavigatationDestinations() -> some View {
         self.navigationDestination(for: MyDestination.self) { destination in
             ResolvedDestinationView(destination: destination)
         }
@@ -43,7 +43,7 @@ extension View {
         self.modalDestination(for: MyDestination.self) { destination in
             NavigationStack {
                 ResolvedDestinationView(destination: destination)
-                    .myNavigtationDestinations()
+                    .myNavigatationDestinations()
             }
         }
     }
