@@ -1,5 +1,5 @@
 //
-//  ContentView.swift
+//  MainView.swift
 //  NavigateTesting
 //
 //  Created by Alexander Kauer on 17.07.25.

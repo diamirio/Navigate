@@ -31,8 +31,16 @@ struct FullScreenCoverModifier: ViewModifier {
     }
     
     func body(content: Content) -> some View {
+        let itemBinding = sheetBinding(idx: idx)
+        let item = itemBinding.wrappedValue
+        
         content
-            .fullScreenCover(item: sheetBinding(idx: idx)) { item in
+            .fullScreenCover(
+                item: itemBinding,
+                onDismiss: {
+                    item?.onDismiss?()
+                }
+            ) { item in
                 if let mapping = mapping.mapping[ObjectIdentifier(type(of: item.destination))] {
                     AnyView(mapping(item))
                         .modifier(FullScreenCoverModifier(path: $path, idx: idx + 1, mapping: self.mapping))

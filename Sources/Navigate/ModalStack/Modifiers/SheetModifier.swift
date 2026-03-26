@@ -30,8 +30,16 @@ struct SheetModifier: ViewModifier {
 	}
 	
 	func body(content: Content) -> some View {
-		content
-			.sheet(item: sheetBinding(idx: idx)) { item in
+        let itemBinding = sheetBinding(idx: idx)
+        let item = itemBinding.wrappedValue
+        
+        content
+            .sheet(
+                item: itemBinding,
+                onDismiss: {
+                    item?.onDismiss?()
+                }
+            ) { item in
 				if let mapping = mapping.mapping[ObjectIdentifier(type(of: item.destination))] {
 					AnyView(mapping(item))
 						.modifier(SheetModifier(path: $path, idx: idx + 1, mapping: self.mapping))

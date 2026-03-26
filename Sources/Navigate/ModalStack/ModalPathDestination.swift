@@ -10,31 +10,34 @@ import SwiftUI
 /// Helper for holding the `destination` with the modal presentation type
 /// Needed for binding the path of the `ModalStack`
 public struct ModalPathDestination: NavigationDestination {
-	public let destination: any NavigationDestination
-	public let type: ModalType
-	
-	public init<D: NavigationDestination>(_ destination: D, type: ModalType) {
-		self.destination = destination
-		self.type = type
-	}
-	
-	func unwrap<D: NavigationDestination>() -> D {
-		destination as! D
-	}
+    public let destination: any NavigationDestination
+    public let type: ModalType
+    public let onDismiss: (() -> Void)?
+    
+    public init<D: NavigationDestination>(_ destination: D, type: ModalType, onDismiss: (() -> Void)? = nil) {
+        self.destination = destination
+        self.type = type
+        self.onDismiss = onDismiss
+    }
+    
+    func unwrap<D: NavigationDestination>() -> D {
+        destination as! D
+    }
     
     public func unwrap<D: NavigationDestination>(_ type: D.Type) -> D? {
         destination as? D
     }
-	
-	public var id: AnyHashable {
-		destination.id as! AnyHashable
-	}
-	
-	public static func == (lhs: ModalPathDestination, rhs: ModalPathDestination) -> Bool {
-		lhs.destination.hashValue == rhs.destination.hashValue
-	}
-	
-	public func hash(into hasher: inout Hasher) {
-		hasher.combine(destination)
-	}
+    
+    public var id: AnyHashable {
+        destination.id as! AnyHashable
+    }
+    
+    public static func == (lhs: ModalPathDestination, rhs: ModalPathDestination) -> Bool {
+        lhs.destination.hashValue == rhs.destination.hashValue
+    }
+    
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(destination)
+    }
 }
+

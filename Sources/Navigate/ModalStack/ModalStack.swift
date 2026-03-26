@@ -32,9 +32,9 @@ public struct ModalStack<Root: View>: View {
 		self.root = root()
 	}
 	
-	private func presentSheet(_ destination: any NavigationDestination, type: ModalType) {
-        path.wrappedValue.append(ModalPathDestination(destination, type: type))
-	}
+    private func presentSheet(_ destination: any NavigationDestination, type: ModalType, onDismiss: (() -> Void)?) {
+        path.wrappedValue.append(ModalPathDestination(destination, type: type, onDismiss: onDismiss))
+    }
 	
 	private func dismissAll() {
 		path.wrappedValue.removeAll()

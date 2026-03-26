@@ -9,10 +9,6 @@ import Navigate
 import SwiftUI
 
 struct FeatureCView: View {
-    
-    @Environment(Router.self)
-    var router: Router
-    
     var body: some View {
         List {
             NavigationLink(destination: .featureD) {
@@ -21,10 +17,14 @@ struct FeatureCView: View {
             
             SheetLink(destination: .featureD) {
                 Text("Sheet to feature D")
+            } onDismiss: {
+                print("Sheet to feature D dismissed")
             }
             
             FullScreenCoverLink(destination: .featureD) {
                 Text("FullScreenCover to feature D")
+            } onDismiss: {
+                print("FullScreenCover to feature D dismissed")
             }
         }
         .navigationTitle("Feature C")
@@ -33,5 +33,5 @@ struct FeatureCView: View {
 }
 
 #Preview {
-    FeatureBView()
+    FeatureCView()
 }

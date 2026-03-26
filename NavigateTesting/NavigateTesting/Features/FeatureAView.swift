@@ -17,10 +17,14 @@ struct FeatureAView: View {
             
             SheetLink(destination: .featureB) {
                 Text("Sheet to feature B")
+            } onDismiss: {
+                print("Sheet to feature B dismissed")
             }
             
             FullScreenCoverLink(destination: .featureB) {
                 Text("FullScreenCover to feature B")
+            } onDismiss: {
+                print("FullScreenCover to feature B dismissed")
             }
         }
         .navigationTitle("Feature A")
