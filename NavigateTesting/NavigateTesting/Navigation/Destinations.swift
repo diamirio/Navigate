@@ -31,21 +31,24 @@ extension NavigationLink where Destination == Never {
 }
 
 extension SheetLink {
-    /// NavigationLink init for `Navigate` framework
+    /// SheetLink init for `Navigate` framework
     /// - Parameters:
     ///   - destination: The `NavigationDestination` to navigate to
     ///   - label: The label for the `NavigationLink`
-    init(destination: MyDestination, @ViewBuilder label: @escaping () -> Label) {
-        self.init(destination: destination as any NavigationDestination, label: label)
+    ///   - onDismiss: Closure to be called when the SheetLink is dismissed
+    init(destination: MyDestination, @ViewBuilder label: @escaping () -> Label, onDismiss: (() -> Void)? = nil) {
+        self.init(destination: destination as any NavigationDestination, label: label, onDismiss: onDismiss)
     }
 }
 
 extension FullScreenCoverLink {
-    /// NavigationLink init for `Navigate` framework
+    /// FullScreenCoverLink init for `Navigate` framework
     /// - Parameters:
     ///   - destination: The `NavigationDestination` to navigate to
     ///   - label: The label for the `NavigationLink`
-    init(destination: MyDestination, @ViewBuilder label: @escaping () -> Label) {
-        self.init(destination: destination as any NavigationDestination, label: label)
+    ///   - onDismiss: Closure to be called when the FullScreenCoverLink is dismissed
+    init(destination: MyDestination, @ViewBuilder label: @escaping () -> Label, onDismiss: (() -> Void)? = nil) {
+        self.init(destination: destination as any NavigationDestination, label: label, onDismiss: onDismiss)
     }
 }
+

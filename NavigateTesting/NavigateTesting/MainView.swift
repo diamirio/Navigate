@@ -1,5 +1,5 @@
 //
-//  ContentView.swift
+//  MainView.swift
 //  NavigateTesting
 //
 //  Created by Alexander Kauer on 17.07.25.
@@ -19,7 +19,7 @@ struct MainView: View {
                 Tab("Home", systemImage: "house", value: .home) {
                     NavigationStack(path: $router.homeTabPath) {
                         FeatureAView()
-                            .myNavigtationDestinations()
+                            .myNavigatationDestinations()
                             .toolbar {
                                 ToolbarItem(placement: .topBarTrailing) {
                                     SheetLink(destination: .settings) {
@@ -33,7 +33,7 @@ struct MainView: View {
                 Tab("Feature B", systemImage: "pencil", value: .tab) {
                     NavigationStack(path: $router.tabPath) {
                         FeatureBView()
-                            .myNavigtationDestinations()
+                            .myNavigatationDestinations()
                     }
                 }
             }
