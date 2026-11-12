@@ -1,6 +1,6 @@
 ---
 name: navigate
-description: Integrate and use the Navigate SwiftUI navigation library (diamirio/Navigate) — NavigationDestination enums, ModalStack for stacked sheets and full-screen covers, SheetLink / FullScreenCoverLink, modalDestination registration, programmatic modal paths, onDismiss and dismissAllModals. Use when adding Navigate to an app or package, defining destinations, presenting or dismissing sheets/covers, wiring a router, or debugging a modal that shows nothing or won't stack. Triggers on "Navigate", "ModalStack", "SheetLink", "FullScreenCoverLink", "ModalPathDestination", "modalDestination", "NavigationDestination".
+description: Integrate and use the Navigate SwiftUI navigation library (diamirio/Navigate) — NavigationDestination enums, ModalStack for stacked sheets and full-screen covers, SheetLink / FullScreenCoverLink, modalDestination registration, programmatic modal paths, onDismiss and dismissAllModals. Use when adding Navigate to an app or package, defining destinations, presenting or dismissing sheets/covers, wiring a router, testing navigation state, or debugging a modal that shows nothing or won't stack. Triggers on "Navigate", "ModalStack", "SheetLink", "FullScreenCoverLink", "ModalPathDestination", "modalDestination", "NavigationDestination".
 ---
 
 # Navigate — integration & usage
@@ -200,6 +200,51 @@ Read what is on the stack: `router.modalPath.last?.unwrap(AppDestination.self)`,
 - All modals: `@Environment(\.dismissAllModals) private var dismissAllModals` → `dismissAllModals()`.
 - `onDismiss` passed to a link / `ModalPathDestination` runs after that modal is dismissed
   (swipe, `dismiss()`, or path change).
+
+## Testing
+
+Navigation is state: test the router (or the reactor / view model) that changes `modalPath` and the navigation paths, with Swift Testing. Do not unit-test the SwiftUI presentation itself; cover that with UI tests if the flow is business-critical.
+
+**Pitfall: `ModalPathDestination ==` ignores `type` and `onDismiss`.** Two entries with the same destination are equal whether one is a sheet and the other a full-screen cover. Never assert `modalPath == [ModalPathDestination(...)]`; unwrap the destination and check `type` separately:
+
+```swift
+import Navigate
+import Testing
+@testable import MyApp
+
+@MainActor
+struct RouterTests {
+    @Test("Showing the profile presents it full screen")
+    func showProfile() {
+        // Given
+        let sut = Router()
+
+        // When
+        sut.showProfile(userID: "42")
+
+        // Then
+        #expect(sut.modalPath.count == 1)
+        #expect(sut.modalPath.last?.unwrap(AppDestination.self) == .profile(userID: "42"))
+        #expect(sut.modalPath.last?.type == .fullScreen)
+    }
+
+    @Test("Logout dismisses all modals")
+    func logoutDismissesAll() {
+        // Given
+        let sut = Router()
+        sut.modalPath = [ModalPathDestination(AppDestination.settings, type: .sheet)]
+
+        // When
+        sut.logout()
+
+        // Then
+        #expect(sut.modalPath.isEmpty)
+    }
+}
+```
+
+- `onDismiss` runs only when SwiftUI dismisses the modal; removing an entry from the path in a unit test does not call it. Test the closure's effect by calling the handler the router passes in directly.
+- `ModalType.fullScreen` is unavailable on macOS; guard full-screen tests with `#if !os(macOS)` in multi-platform packages.
 
 ## Troubleshooting
 
